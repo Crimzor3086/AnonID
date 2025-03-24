@@ -24,10 +24,11 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import { getDIDsForAddress, updateDIDAttributes, deactivateDID as deactivateStoredDID } from '../utils/didStorage';
+import Logo from '../components/Logo';
 
 const COLORS = {
-  primary: '#1a237e',
-  secondary: '#6a1b9a',
+  primary: '#ff0000',
+  secondary: '#000000',
   textLight: '#ffffff',
 };
 
@@ -153,14 +154,18 @@ const ManageDID: React.FC = () => {
         <Breadcrumbs />
         
         <Box sx={{ mt: 4, mb: 4 }}>
-          <Box sx={{ mb: 4 }}>
-            <AnonIDDescription variant="dark" compact />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+            <Logo />
+            <Typography variant="h4" component="h1" sx={{ color: COLORS.primary, fontWeight: 700 }}>
+              Manage Your DIDs
+            </Typography>
           </Box>
 
           <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
             <Button
               startIcon={<ArrowBack />}
               onClick={() => navigate('/')}
+              sx={{ color: COLORS.primary }}
             >
               Back to Home
             </Button>
@@ -168,36 +173,39 @@ const ManageDID: React.FC = () => {
               startIcon={<Add />}
               variant="contained"
               onClick={() => navigate('/create')}
+              sx={{ 
+                background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                '&:hover': {
+                  background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                  opacity: 0.8,
+                }
+              }}
             >
               Create New DID
             </Button>
           </Stack>
 
-          <Typography variant="h4" component="h1" gutterBottom>
-            Manage Your DIDs
-          </Typography>
-
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 2, border: `1px solid ${COLORS.primary}` }}>
               {error}
             </Alert>
           )}
 
           {success && (
-            <Alert severity="success" sx={{ mb: 2 }}>
+            <Alert severity="success" sx={{ mb: 2, border: `1px solid ${COLORS.primary}` }}>
               {success}
             </Alert>
           )}
 
           {loading && !error && (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-              <CircularProgress />
+              <CircularProgress sx={{ color: COLORS.primary }} />
             </Box>
           )}
 
-          <Paper sx={{ p: 3, mb: 3 }}>
+          <Paper sx={{ p: 3, mb: 3, border: `1px solid ${COLORS.primary}` }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6">
+              <Typography variant="h6" sx={{ color: COLORS.primary }}>
                 Your DIDs
               </Typography>
               <Tooltip title="Refresh DIDs list">
@@ -205,8 +213,9 @@ const ManageDID: React.FC = () => {
                   onClick={loadUserDIDs} 
                   disabled={loading}
                   sx={{
+                    color: COLORS.primary,
                     '&:hover': {
-                      color: COLORS.primary
+                      bgcolor: `${COLORS.primary}15`,
                     }
                   }}
                 >
@@ -227,7 +236,7 @@ const ManageDID: React.FC = () => {
             {error && (
               <Alert 
                 severity="error" 
-                sx={{ mb: 2 }}
+                sx={{ mb: 2, border: `1px solid ${COLORS.primary}` }}
                 action={
                   <Button color="inherit" size="small" onClick={loadUserDIDs}>
                     Try Again
@@ -244,12 +253,12 @@ const ManageDID: React.FC = () => {
             )}
             
             {!loading && !error && dids.length === 0 ? (
-              <Alert severity="info">
+              <Alert severity="info" sx={{ border: `1px solid ${COLORS.primary}` }}>
                 You don't have any DIDs yet.
                 <Button
                   size="small"
                   onClick={() => navigate('/create')}
-                  sx={{ ml: 2 }}
+                  sx={{ ml: 2, color: COLORS.primary }}
                 >
                   Create Your First DID
                 </Button>
@@ -265,12 +274,12 @@ const ManageDID: React.FC = () => {
                         cursor: 'pointer',
                         borderRadius: 1,
                         '&:hover': {
-                          bgcolor: 'rgba(0, 0, 0, 0.04)',
+                          bgcolor: `${COLORS.primary}15`,
                         },
                         '&.Mui-selected': {
-                          bgcolor: `${COLORS.primary}15`,
+                          bgcolor: `${COLORS.primary}25`,
                           '&:hover': {
-                            bgcolor: `${COLORS.primary}25`,
+                            bgcolor: `${COLORS.primary}35`,
                           }
                         }
                       }}
@@ -281,12 +290,12 @@ const ManageDID: React.FC = () => {
                           <Chip
                             size="small"
                             label={selectedDID === did ? 'Selected' : 'Click to select'}
-                            color={selectedDID === did ? 'primary' : 'default'}
                             sx={{ 
                               bgcolor: selectedDID === did ? `${COLORS.primary}15` : undefined,
                               borderColor: selectedDID === did ? COLORS.primary : undefined,
                               borderWidth: selectedDID === did ? 1 : undefined,
-                              borderStyle: selectedDID === did ? 'solid' : undefined
+                              borderStyle: selectedDID === did ? 'solid' : undefined,
+                              color: selectedDID === did ? COLORS.primary : undefined
                             }}
                           />
                         }
@@ -299,9 +308,9 @@ const ManageDID: React.FC = () => {
                           navigate(`/verify?did=${did}`);
                         }}
                         sx={{
-                          color: COLORS.secondary,
+                          color: COLORS.primary,
                           '&:hover': {
-                            bgcolor: `${COLORS.secondary}15`,
+                            bgcolor: `${COLORS.primary}15`,
                           }
                         }}
                       >

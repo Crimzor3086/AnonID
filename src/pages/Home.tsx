@@ -6,15 +6,14 @@ import { SwapHoriz } from '@mui/icons-material';
 import { SAMPLE_DIDS } from '../utils/didFormat';
 import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
+import Logo from '../components/Logo';
 
 // Custom theme colors
 const COLORS = {
-  primary: '#1a237e', // Navy blue
-  secondary: '#6a1b9a', // Purple
-  primaryLight: '#534bae',
-  secondaryLight: '#9c27b0',
+  primary: '#ff0000',
+  secondary: '#000000',
   textLight: '#ffffff',
-  textDark: '#1a237e',
+  textDark: '#000000',
 };
 
 const Home: React.FC = () => {
@@ -59,60 +58,47 @@ const Home: React.FC = () => {
     <>
       <ConnectionStrip />
       <Container maxWidth="lg">
-        <Box sx={{ py: 4 }}>
-          {/* Welcome Section */}
-          <AnonIDDescription variant="dark" />
-          
-          {/* Features Grid */}
-          <Grid container spacing={4}>
+        <Box sx={{ mt: 4, mb: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+            <Logo />
+            <Typography variant="h4" component="h1" sx={{ color: COLORS.primary, fontWeight: 700 }}>
+              Welcome to AnonID
+            </Typography>
+          </Box>
+
+          <Grid container spacing={3}>
             {features.map((feature, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Paper
-                  sx={{
-                    p: 3,
+                <Paper 
+                  sx={{ 
+                    p: 3, 
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
+                    border: `1px solid ${COLORS.primary}`,
                     '&:hover': {
-                      boxShadow: 6,
-                      transform: 'translateY(-4px)',
-                      transition: 'all 0.3s ease-in-out',
-                      borderColor: index % 2 === 0 ? COLORS.primary : COLORS.secondary
-                    },
-                    border: 2,
-                    borderColor: 'transparent'
+                      boxShadow: `0 4px 20px rgba(255, 0, 0, 0.1)`,
+                    }
                   }}
-                  elevation={3}
                 >
-                  <Box>
-                    <Typography 
-                      variant="h5" 
-                      component="h2" 
-                      gutterBottom
-                      sx={{ 
-                        color: index % 2 === 0 ? COLORS.primary : COLORS.secondary,
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      {feature.title}
-                    </Typography>
-                    <Typography variant="body1" color="textSecondary" paragraph>
-                      {feature.description}
-                    </Typography>
-                  </Box>
+                  <Typography variant="h6" gutterBottom sx={{ color: COLORS.primary }}>
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 2, flexGrow: 1 }}>
+                    {feature.description}
+                  </Typography>
                   <Button
                     variant="contained"
-                    color={index % 2 === 0 ? "primary" : "secondary"}
                     size="large"
                     fullWidth
                     onClick={feature.action}
                     disabled={!hasSufficientBalance}
                     sx={{ 
                       mt: 2,
-                      bgcolor: index % 2 === 0 ? COLORS.primary : COLORS.secondary,
+                      background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
                       '&:hover': {
-                        bgcolor: index % 2 === 0 ? COLORS.primaryLight : COLORS.secondaryLight
+                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                        opacity: 0.8,
                       }
                     }}
                   >
@@ -125,12 +111,12 @@ const Home: React.FC = () => {
 
           {/* Info Section */}
           {error && (
-            <Alert severity="error" sx={{ mt: 4 }}>
+            <Alert severity="error" sx={{ mt: 4, border: `1px solid ${COLORS.primary}` }}>
               {error}
             </Alert>
           )}
           {!hasSufficientBalance && (
-            <Alert severity="warning" sx={{ mt: 4 }}>
+            <Alert severity="warning" sx={{ mt: 4, border: `1px solid ${COLORS.primary}` }}>
               Your wallet has insufficient EDU. Please ensure you have at least 0.001 EDU to perform operations.
             </Alert>
           )}

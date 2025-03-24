@@ -18,10 +18,11 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import { verifyDID } from '../utils/didStorage';
+import Logo from '../components/Logo';
 
 const COLORS = {
-  primary: '#1a237e',
-  secondary: '#6a1b9a',
+  primary: '#ff0000',
+  secondary: '#000000',
   textLight: '#ffffff',
 };
 
@@ -163,30 +164,30 @@ const VerifyDID: React.FC = () => {
         <Breadcrumbs />
         
         <Box sx={{ mt: 4, mb: 4 }}>
-          <Box sx={{ mb: 4 }}>
-            <AnonIDDescription variant="dark" compact />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+            <Logo />
+            <Typography variant="h4" component="h1" sx={{ color: COLORS.primary, fontWeight: 700 }}>
+              Verify DID
+            </Typography>
           </Box>
 
           <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
             <Button
               startIcon={<ArrowBack />}
               onClick={() => navigate('/')}
+              sx={{ color: COLORS.primary }}
             >
               Back to Home
             </Button>
           </Stack>
 
-          <Typography variant="h4" component="h1" gutterBottom>
-            Verify DID
-          </Typography>
-
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 2, border: `1px solid ${COLORS.primary}` }}>
               {error}
             </Alert>
           )}
 
-          <Paper sx={{ p: 3 }}>
+          <Paper sx={{ p: 3, border: `1px solid ${COLORS.primary}` }}>
             <form onSubmit={handleVerify}>
               <TextField
                 fullWidth
@@ -203,6 +204,13 @@ const VerifyDID: React.FC = () => {
                 variant="contained"
                 disabled={!did || loading}
                 fullWidth
+                sx={{ 
+                  background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                  '&:hover': {
+                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                    opacity: 0.8,
+                  }
+                }}
               >
                 {loading ? <CircularProgress size={24} /> : 'Verify DID'}
               </Button>
@@ -210,64 +218,95 @@ const VerifyDID: React.FC = () => {
           </Paper>
 
           {verificationResult && (
-            <Paper sx={{ p: 3, mt: 3 }}>
+            <Paper sx={{ p: 3, mt: 3, border: `1px solid ${COLORS.primary}` }}>
               <Stack spacing={2}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   {verificationResult.isValid ? (
-                    <CheckCircle color="success" sx={{ fontSize: 40 }} />
+                    <CheckCircle sx={{ fontSize: 40, color: COLORS.primary }} />
                   ) : (
-                    <ErrorIcon color="error" sx={{ fontSize: 40 }} />
+                    <ErrorIcon sx={{ fontSize: 40, color: COLORS.primary }} />
                   )}
-                  <Typography variant="h6">
+                  <Typography variant="h6" sx={{ color: COLORS.primary }}>
                     {verificationResult.isValid ? 'DID is Valid' : 'DID is Invalid'}
                   </Typography>
                 </Box>
 
-                <Alert severity={verificationResult.isValid ? "success" : "error"}>
+                <Alert 
+                  severity={verificationResult.isValid ? "success" : "error"}
+                  sx={{ border: `1px solid ${COLORS.primary}` }}
+                >
                   {verificationResult.message}
                 </Alert>
 
-                {verificationResult.details && (
+                {verificationResult.details &&
                   <Box>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2" gutterBottom sx={{ color: COLORS.primary }}>
                       Verification Details:
                     </Typography>
                     <Stack spacing={1}>
                       <Chip 
                         label={`Exists on Blockchain: ${verificationResult.details.exists ? 'Yes' : 'No'}`}
-                        color={verificationResult.details.exists ? "success" : "error"}
+                        sx={{ 
+                          bgcolor: verificationResult.details.exists ? `${COLORS.primary}15` : 'error.light',
+                          color: verificationResult.details.exists ? COLORS.primary : 'error.main',
+                          border: `1px solid ${verificationResult.details.exists ? COLORS.primary : 'error.main'}`
+                        }}
                         size="small"
                       />
                       <Chip 
                         label={`Blockchain Status: ${verificationResult.details.blockchainStatus ? 'Active' : 'Inactive'}`}
-                        color={verificationResult.details.blockchainStatus ? "success" : "error"}
+                        sx={{ 
+                          bgcolor: verificationResult.details.blockchainStatus ? `${COLORS.primary}15` : 'error.light',
+                          color: verificationResult.details.blockchainStatus ? COLORS.primary : 'error.main',
+                          border: `1px solid ${verificationResult.details.blockchainStatus ? COLORS.primary : 'error.main'}`
+                        }}
                         size="small"
                       />
                       {verificationResult.details.owner && (
                         <Chip 
                           label={`Owner: ${verificationResult.details.owner.slice(0, 6)}...${verificationResult.details.owner.slice(-4)}`}
                           size="small"
+                          sx={{ 
+                            bgcolor: `${COLORS.primary}15`,
+                            color: COLORS.primary,
+                            border: `1px solid ${COLORS.primary}`
+                          }}
                         />
                       )}
                       {verificationResult.details.createdAt && (
                         <Chip 
                           label={`Created: ${new Date(verificationResult.details.createdAt).toLocaleString()}`}
                           size="small"
+                          sx={{ 
+                            bgcolor: `${COLORS.primary}15`,
+                            color: COLORS.primary,
+                            border: `1px solid ${COLORS.primary}`
+                          }}
                         />
                       )}
                       {verificationResult.details.lastModified && (
                         <Chip 
                           label={`Last Modified: ${new Date(verificationResult.details.lastModified).toLocaleString()}`}
                           size="small"
+                          sx={{ 
+                            bgcolor: `${COLORS.primary}15`,
+                            color: COLORS.primary,
+                            border: `1px solid ${COLORS.primary}`
+                          }}
                         />
                       )}
                       <Chip 
                         label={`Attributes: ${verificationResult.details.attributeCount}`}
                         size="small"
+                        sx={{ 
+                          bgcolor: `${COLORS.primary}15`,
+                          color: COLORS.primary,
+                          border: `1px solid ${COLORS.primary}`
+                        }}
                       />
                     </Stack>
                   </Box>
-                )}
+                }
               </Stack>
             </Paper>
           )}

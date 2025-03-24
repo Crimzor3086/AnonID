@@ -22,11 +22,16 @@ import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import { SAMPLE_DIDS } from '../utils/didFormat';
 import { storeDID } from '../utils/didStorage';
+import { isValidDID } from '../utils/didFormat';
+import { ethers } from 'ethers';
+import Logo from '../components/Logo';
 
 const COLORS = {
-  primary: '#1a237e',
-  secondary: '#6a1b9a',
+  primary: '#ff0000',
+  secondary: '#000000',
   textLight: '#ffffff',
+  background: '#f5f5f5',
+  paper: '#ffffff',
 };
 
 const CreateDID: React.FC = () => {
@@ -37,6 +42,11 @@ const CreateDID: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [createdDID, setCreatedDID] = useState<string | null>(null);
+  const [isConfirming, setIsConfirming] = useState(false);
+
+  // Check if user has sufficient balance
+  const balanceNum = balance ? parseFloat(balance) : 0;
+  const hasSufficientBalance = balanceNum >= 0.001;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,29 +55,69 @@ const CreateDID: React.FC = () => {
       return;
     }
 
+    if (!hasSufficientBalance) {
+      setError('Insufficient balance. You need at least 0.001 EDU to create a DID.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
+      setIsConfirming(false);
 
-      // Validate DID format
-      if (!did.startsWith('did:edu:testnet:') || did.length !== 24) {
+      // Validate DID format using shared utility
+      if (!isValidDID(did)) {
         throw new Error('Invalid DID format. Must be: did:edu:testnet:<8 characters>');
       }
 
-      // Check if DID already exists
-      const existingDID = await contract.getDID(did);
-      if (existingDID && existingDID !== '0x0000000000000000000000000000000000000000') {
+      console.log('Checking if DID exists:', did);
+      
+      // Check if DID already exists with better error handling
+      let isActive = false;
+      try {
+        isActive = await contract.isDIDActive(did);
+        console.log('DID active check result:', isActive);
+      } catch (err: any) {
+        console.log('Error checking DID existence:', err);
+        // If we get a BAD_DATA error, we can assume the DID doesn't exist
+        if (err.code === 'BAD_DATA' || err.message.includes('could not decode result data')) {
+          isActive = false;
+        } else {
+          throw err;
+        }
+      }
+
+      if (isActive) {
         throw new Error('This DID already exists');
       }
       
-      // Create DID on the blockchain
+      console.log('Creating DID on blockchain:', did);
+      
+      // Log contract details for debugging
+      console.log('Contract address:', await contract.getAddress());
+      console.log('Account:', account);
+      
+      // Check if contract exists at the address
+      const code = await contract.runner?.provider?.getCode(await contract.getAddress());
+      if (!code || code === '0x') {
+        throw new Error('Contract not found at the specified address');
+      }
+      
+      // Create DID on the blockchain with modified parameters
       const tx = await contract.createDID(did, {
-        gasLimit: 200000 // Add reasonable gas limit
+        gasLimit: 300000,
+        from: account
       });
+      
+      console.log('Transaction sent:', tx.hash);
+      setIsConfirming(true);
       
       // Wait for confirmation and get receipt
       const receipt = await tx.wait();
+      console.log('Transaction receipt:', receipt);
+      
       if (!receipt.status) {
+        console.error('Transaction failed with receipt:', receipt);
         throw new Error('Transaction failed');
       }
       
@@ -86,6 +136,15 @@ const CreateDID: React.FC = () => {
         navigate('/manage');
       }, 2000);
     } catch (err: any) {
+      console.error('Error in handleSubmit:', err);
+      console.error('Error details:', {
+        code: err.code,
+        message: err.message,
+        data: err.data,
+        transaction: err.transaction,
+        receipt: err.receipt
+      });
+      
       let errorMessage = 'Error creating DID';
       
       // Handle specific error cases
@@ -93,8 +152,16 @@ const CreateDID: React.FC = () => {
         errorMessage = 'Transaction was rejected by user';
       } else if (err.code === 'INSUFFICIENT_FUNDS') {
         errorMessage = 'Insufficient funds to create DID';
+      } else if (err.code === 'UNKNOWN_ERROR' || err.code === -32603) {
+        errorMessage = `Transaction failed: ${err.message || 'Unknown error'}`;
       } else if (err.message.includes('user rejected')) {
         errorMessage = 'Transaction was rejected by user';
+      } else if (err.message.includes('nonce too low')) {
+        errorMessage = 'Transaction nonce error. Please try again.';
+      } else if (err.message.includes('insufficient funds')) {
+        errorMessage = 'Insufficient funds to create DID';
+      } else if (err.message.includes('execution reverted')) {
+        errorMessage = 'Transaction reverted. Please check if the DID is already registered.';
       } else if (err.message) {
         errorMessage = err.message;
       }
@@ -102,6 +169,7 @@ const CreateDID: React.FC = () => {
       setError(errorMessage);
     } finally {
       setLoading(false);
+      setIsConfirming(false);
     }
   };
 
@@ -124,37 +192,38 @@ const CreateDID: React.FC = () => {
         <Breadcrumbs />
         
         <Box sx={{ mt: 4, mb: 4 }}>
-          <Box sx={{ mb: 4 }}>
-            <AnonIDDescription variant="dark" compact />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+            <Logo />
+            <Typography variant="h4" component="h1" sx={{ color: COLORS.primary, fontWeight: 700 }}>
+              Create New DID
+            </Typography>
           </Box>
           
           <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
             <Button
               startIcon={<ArrowBack />}
               onClick={() => navigate('/')}
+              sx={{ color: COLORS.primary }}
             >
               Back to Home
             </Button>
           </Stack>
 
-          <Typography variant="h4" component="h1" gutterBottom>
-            Create New DID
-          </Typography>
-
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 2, border: `1px solid ${COLORS.primary}` }}>
               {error}
             </Alert>
           )}
 
           {success && createdDID && (
-            <Alert severity="success" sx={{ mb: 2 }}>
+            <Alert severity="success" sx={{ mb: 2, border: `1px solid ${COLORS.primary}` }}>
               DID created successfully!
               <Box sx={{ mt: 2 }}>
                 <Button
                   variant="outlined"
                   startIcon={<ManageAccounts />}
                   onClick={() => navigate('/manage')}
+                  sx={{ borderColor: COLORS.primary, color: COLORS.primary }}
                 >
                   Manage Your DIDs
                 </Button>
@@ -162,7 +231,7 @@ const CreateDID: React.FC = () => {
             </Alert>
           )}
 
-          <Paper sx={{ p: 3 }}>
+          <Paper sx={{ p: 3, bgcolor: COLORS.paper, border: `1px solid ${COLORS.primary}` }}>
             <form onSubmit={handleSubmit}>
               <Box sx={{ mb: 2 }}>
                 <TextField
@@ -183,7 +252,8 @@ const CreateDID: React.FC = () => {
                     background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
                     color: 'white',
                     '&:hover': {
-                      background: `linear-gradient(135deg, ${COLORS.primaryLight} 0%, ${COLORS.secondaryLight} 100%)`,
+                      background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                      opacity: 0.8,
                     },
                     '&.Mui-disabled': {
                       background: 'rgba(0, 0, 0, 0.12)',
@@ -197,15 +267,28 @@ const CreateDID: React.FC = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={!did || loading}
-                  sx={{ flex: 1 }}
+                  disabled={!did || loading || !hasSufficientBalance}
+                  sx={{ 
+                    flex: 1,
+                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                    '&:hover': {
+                      background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                      opacity: 0.8,
+                    },
+                  }}
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Create DID'}
+                  {loading ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CircularProgress size={24} />
+                      {isConfirming ? 'Confirming...' : 'Creating DID...'}
+                    </Box>
+                  ) : 'Create DID'}
                 </Button>
                 <Button
                   variant="outlined"
                   onClick={() => navigate('/manage')}
                   disabled={loading}
+                  sx={{ borderColor: COLORS.primary, color: COLORS.primary }}
                 >
                   View Existing DIDs
                 </Button>
@@ -219,7 +302,8 @@ const CreateDID: React.FC = () => {
               p: 3, 
               mt: 4,
               background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
-              color: COLORS.textLight
+              color: COLORS.textLight,
+              border: `1px solid ${COLORS.primary}`
             }}
           >
             <Typography variant="h6" gutterBottom sx={{ color: COLORS.textLight }}>
@@ -316,13 +400,13 @@ const CreateDID: React.FC = () => {
               </Typography>
               <Tooltip title="Required for DID operations">
                 <Chip
-                  label="0.001 EDU"
+                  label={`${balanceNum.toFixed(3)} EDU`}
                   size="small"
                   sx={{ 
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    bgcolor: hasSufficientBalance ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 0, 0, 0.2)',
                     color: COLORS.textLight,
                     '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.2)'
+                      bgcolor: hasSufficientBalance ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 0, 0, 0.3)'
                     }
                   }}
                 />

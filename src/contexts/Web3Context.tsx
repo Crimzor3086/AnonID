@@ -17,7 +17,7 @@ const NETWORK_CONFIG = {
 };
 
 // Contract configuration
-const CONTRACT_ADDRESS = '0x558E0Af2a933B4cA111b27Eb326765eA6cBbb5EC';
+const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || '0x558E0Af2a933B4cA111b27Eb326765eA6cBbb5EC';
 
 interface Web3ContextType {
   account: string | null;
