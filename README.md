@@ -1,113 +1,113 @@
-# Decentralized Identity Verification (DID) System
+# AnonID - Decentralized Identity Verification System
 
-This project implements a Decentralized Identity Verification system using blockchain technology. It allows users to create, manage, and verify their decentralized identities in a secure and privacy-preserving manner.
+A modern web application for creating, managing, and verifying Decentralized Identifiers (DIDs) on the Educhain testnet.
+
+![AnonID Logo](src/components/Logo.tsx)
 
 ## Features
 
-- **Create DID**: Create your own decentralized identity with unique attributes
-- **Manage DID**: Update and manage your existing DIDs and their attributes
-- **Verify DID**: Verify other users' DIDs and their associated attributes
-- **Wallet Integration**: Seamless MetaMask wallet connection
-- **Network Support**: Built for Sepolia testnet
-- **Security**: Protected routes and secure wallet interactions
-
-## Technology Stack
-
-- **Frontend**: React.js with TypeScript
-- **Styling**: Material-UI (MUI) components
-- **Blockchain**: Ethereum (Sepolia testnet)
-- **Web3**: ethers.js for blockchain interaction
-- **Build Tool**: Vite
-- **Smart Contract**: Solidity
+- 🔐 Create and manage Decentralized Identifiers (DIDs)
+- 🔍 Verify DIDs on the blockchain
+- 💼 Manage DID attributes and metadata
+- 🔗 Built on Educhain testnet
+- 🎨 Modern UI with AnonID branding
+- 🔒 Secure wallet integration
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- MetaMask browser extension
-- Sepolia testnet ETH (available from faucets)
+- npm or yarn
+- MetaMask or compatible Web3 wallet
+- EDU tokens on Educhain testnet (minimum 0.001 EDU)
 
-## Getting Started
+## Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/did-verification.git
-   cd did-verification
-   ```
+```bash
+git clone https://github.com/Blac-art/IDENTITY-VERIFICATION-DID-.git
+cd IDENTITY-VERIFICATION-DID-
+```
 
 2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file in the root directory:
-   ```env
-   VITE_CONTRACT_ADDRESS=your_contract_address
-   VITE_NETWORK_NAME=sepolia
-   VITE_NETWORK_ID=11155111
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-5. Open your browser and navigate to:
-   - Local: http://localhost:3000
-   - Network: http://[your-ip]:3000
-
-## Project Structure
-
+```bash
+npm install
 ```
-src/
-  ├── components/     # Reusable React components
-  │   ├── Navbar.tsx        # Navigation bar component
-  │   ├── Breadcrumbs.tsx   # Navigation breadcrumbs
-  │   └── ProtectedRoute.tsx # Route protection wrapper
-  │
-  ├── contracts/     # Smart contract artifacts
-  │   └── DIDRegistry.json  # Contract ABI and bytecode
-  │
-  ├── contexts/      # React contexts
-  │   └── Web3Context.tsx   # Web3 provider and hooks
-  │
-  ├── pages/         # Page components
-  │   ├── Home.tsx          # Landing page
-  │   ├── CreateDID.tsx     # DID creation page
-  │   ├── ManageDID.tsx     # DID management page
-  │   └── VerifyDID.tsx     # DID verification page
-  │
-  └── utils/         # Utility functions
+
+3. Set up environment variables:
+Create a `.env` file in the root directory with:
+```
+VITE_CONTRACT_ADDRESS=your_contract_address
+VITE_RPC_URL=your_rpc_url
+```
+
+## Smart Contract Deployment
+
+1. Navigate to the smart contracts directory:
+```bash
+cd smart-contracts
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Deploy the contract:
+```bash
+npx hardhat run scripts/deploy.ts --network educhain
 ```
 
 ## Usage
 
-1. **Connect Wallet**:
-   - Click "Connect Wallet" button
-   - Approve MetaMask connection
-   - Ensure you're on Sepolia testnet
+1. Start the development server:
+```bash
+npm run dev
+```
 
-2. **Create DID**:
-   - Navigate to Create DID page
-   - Enter your DID identifier
-   - Confirm transaction in MetaMask
+2. Connect your Web3 wallet (MetaMask recommended)
 
-3. **Manage DID**:
-   - View your existing DIDs
-   - Add or modify attributes
-   - Verify DID status
+3. Ensure you have sufficient EDU tokens (minimum 0.001 EDU)
 
-4. **Verify DID**:
-   - Enter a DID to verify
-   - View DID attributes and status
-   - Check ownership information
+4. Access the application at `http://localhost:5173`
+
+## Features in Detail
+
+### Create DID
+- Generate unique DIDs
+- Automatic DID suggestion based on wallet address
+- Blockchain verification
+- Local storage backup
+
+### Manage DID
+- View all your DIDs
+- Add/update DID attributes
+- Deactivate DIDs
+- View DID history
+
+### Verify DID
+- Verify DIDs on the blockchain
+- Check DID status and attributes
+- View detailed verification results
+- Local and blockchain verification
+
+## Technology Stack
+
+- React + TypeScript
+- Vite
+- Material-UI
+- Ethers.js
+- Hardhat
+- Solidity
 
 ## Smart Contract
 
-The DID Registry smart contract is deployed on the Sepolia testnet. It provides the following functionality:
-- DID creation and management
-- Attribute storage and retrieval
-- Ownership verification
-- DID status tracking
+The DID Registry contract provides the following main functions:
+- `createDID(string memory did)`
+- `isDIDActive(string memory did)`
+- `getDIDOwner(string memory did)`
+- `setAttribute(string memory did, string memory key, string memory value)`
+- `getAttribute(string memory did, string memory key)`
+- `deactivateDID(string memory did)`
 
 ## Contributing
 
@@ -119,8 +119,15 @@ The DID Registry smart contract is deployed on the Sepolia testnet. It provides 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
+## Author
 
-For support, please open an issue in the GitHub repository or contact the maintainers.
+- GitHub: [Blac-art](https://github.com/Blac-art)
+- Email: b3masendi7@gmail.com
+
+## Acknowledgments
+
+- Educhain testnet team
+- OpenZeppelin for smart contract templates
+- Material-UI for the component library
