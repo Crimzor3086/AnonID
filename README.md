@@ -24,8 +24,8 @@ A modern web application for creating, managing, and verifying Decentralized Ide
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Blac-art/IDENTITY-VERIFICATION-DID-.git
-cd IDENTITY-VERIFICATION-DID-
+git clone https://github.com/Crimzor3086/AnonID.git
+cd AnonID-
 ```
 
 2. Install dependencies:
@@ -123,7 +123,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Author
 
-- GitHub: [Blac-art](https://github.com/Blac-art)
+- GitHub: [Crimzor3086](https://github.com/Crimzor3086)
 - Email: b3masendi7@gmail.com
 
 ## Acknowledgments
