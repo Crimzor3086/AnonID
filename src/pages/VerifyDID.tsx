@@ -2,22 +2,16 @@ import React, { useState } from 'react';
 import {
   Container,
   Typography,
-  Paper,
   TextField,
   Button,
-  Box,
   Alert,
   CircularProgress,
-  Stack,
-  Chip,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack, CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
 import { useWeb3 } from '../contexts/Web3Context';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { ConnectionStrip } from '../components/ConnectionStrip';
 import { verifyDID } from '../utils/didStorage';
-import Logo from '../components/Logo';
 
 const COLORS = {
   primary: '#ff0000',
@@ -49,7 +43,6 @@ interface VerificationDetails {
 }
 
 const VerifyDID: React.FC = () => {
-  const navigate = useNavigate();
   const { contract } = useWeb3();
   const [did, setDid] = useState('');
   const [loading, setLoading] = useState(false);
