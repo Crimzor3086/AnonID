@@ -18,12 +18,10 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowBack, ManageAccounts, AutoAwesome } from '@mui/icons-material';
 import { useWeb3 } from '../contexts/Web3Context';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import { SAMPLE_DIDS } from '../utils/didFormat';
 import { storeDID } from '../utils/didStorage';
 import { isValidDID } from '../utils/didFormat';
-import { ethers } from 'ethers';
 import Logo from '../components/Logo';
 
 const COLORS = {

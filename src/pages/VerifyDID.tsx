@@ -26,6 +26,18 @@ const COLORS = {
   textLight: '#ffffff',
 };
 
+interface VerificationDetails {
+  formatValid?: boolean;
+  error?: string;
+  blockchainStatus?: boolean;
+  locallyStored?: boolean;
+  localVerification?: {
+    createdAt: number;
+    lastModified: number;
+    isActive: boolean;
+  } | null;
+}
+
 const VerifyDID: React.FC = () => {
   const navigate = useNavigate();
   const { contract } = useWeb3();
@@ -35,7 +47,7 @@ const VerifyDID: React.FC = () => {
   const [verificationResult, setVerificationResult] = useState<{
     isValid: boolean;
     message: string;
-    details?: any;
+    details?: VerificationDetails;
   } | null>(null);
 
   const handleVerify = async (e: React.FormEvent) => {

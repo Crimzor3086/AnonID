@@ -1,6 +1,5 @@
 import React from 'react';
-import { Container, Typography, Paper, Box, Alert, Link, Stack, Divider } from '@mui/material';
-import { OpenInNew } from '@mui/icons-material';
+import { Container, Typography, Paper, Box, Alert, Stack, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3 } from '../contexts/Web3Context';
 import { AnonIDDescription } from '../components/AnonIDDescription';

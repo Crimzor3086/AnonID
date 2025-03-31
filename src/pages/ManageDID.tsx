@@ -21,9 +21,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowBack, Add, Verified, Refresh } from '@mui/icons-material';
 import { useWeb3 } from '../contexts/Web3Context';
 import Breadcrumbs from '../components/Breadcrumbs';
-import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
-import { getDIDsForAddress, updateDIDAttributes, deactivateDID as deactivateStoredDID } from '../utils/didStorage';
+import { getDIDsForAddress, updateDIDAttributes } from '../utils/didStorage';
 import Logo from '../components/Logo';
 
 const COLORS = {
@@ -34,7 +33,7 @@ const COLORS = {
 
 const ManageDID: React.FC = () => {
   const navigate = useNavigate();
-  const { contract, account, isConnected, balance } = useWeb3();
+  const { contract, account, isConnected } = useWeb3();
   const [dids, setDids] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,28 +106,6 @@ const ManageDID: React.FC = () => {
       await loadUserDIDs();
     } catch (err: any) {
       setError(err.message || 'Error adding attribute');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeactivateDID = async (did: string) => {
-    if (!account) return;
-
-    try {
-      setLoading(true);
-      setError(null);
-      
-      // Deactivate on blockchain
-      const tx = await contract?.deactivateDID(did);
-      await tx.wait();
-      
-      // Deactivate in local storage
-      deactivateStoredDID(did, account);
-      
-      await loadUserDIDs();
-    } catch (err: any) {
-      setError(err.message || 'Error deactivating DID');
     } finally {
       setLoading(false);
     }

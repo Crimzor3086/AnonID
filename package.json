@@ -17,9 +17,9 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@openzeppelin/contracts": "^5.2.0",
-    "@types/node": "^20.17.24",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
+    "@types/node": "^20.17.28",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
     "dotenv": "^16.4.7",
     "hardhat": "^2.19.5",

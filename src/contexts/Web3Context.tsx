@@ -29,6 +29,7 @@ interface Web3ContextType {
   isLoading: boolean;
   balance: string | null;
   connectWallet: () => Promise<void>;
+  disconnectWallet: () => void;
 }
 
 const Web3Context = createContext<Web3ContextType>({
@@ -41,6 +42,7 @@ const Web3Context = createContext<Web3ContextType>({
   isLoading: false,
   balance: null,
   connectWallet: async () => {},
+  disconnectWallet: () => {},
 });
 
 export function useWeb3() {
@@ -153,6 +155,14 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     }
   };
 
+  const disconnectWallet = () => {
+    setAccount(null);
+    setContract(null);
+    setProvider(null);
+    setNetworkName(null);
+    setBalance(null);
+  };
+
   // Initialize connection on mount
   useEffect(() => {
     connectWallet();
@@ -172,6 +182,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         connectWallet: async () => {
           await connectWallet();
         },
+        disconnectWallet,
       }}
     >
       {children}

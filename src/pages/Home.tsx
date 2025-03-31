@@ -1,10 +1,8 @@
 import React from 'react';
-import { Container, Typography, Grid, Paper, Button, Box, Alert, Chip, Stack, Tooltip, Link, Divider } from '@mui/material';
+import { Container, Typography, Grid, Paper, Button, Box, Alert, Chip, Tooltip, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3 } from '../contexts/Web3Context';
-import { SwapHoriz } from '@mui/icons-material';
 import { SAMPLE_DIDS } from '../utils/didFormat';
-import { AnonIDDescription } from '../components/AnonIDDescription';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import Logo from '../components/Logo';
 
@@ -19,9 +17,6 @@ const COLORS = {
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const { 
-    account, 
-    networkName, 
-    isConnected, 
     error,
     balance
   } = useWeb3();
