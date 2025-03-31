@@ -160,6 +160,11 @@ const VerifyDID: React.FC = () => {
         </Button>
       </form>
       {error && <Alert severity="error">{error}</Alert>}
+      {verificationResult && (
+        <Alert severity={verificationResult.isValid ? "success" : "warning"}>
+          {verificationResult.message}
+        </Alert>
+      )}
     </Container>
   );
 };
