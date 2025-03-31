@@ -1,8 +1,6 @@
 # AnonID - Decentralized Identity Verification System
 
-A modern web application for creating, managing, and verifying Decentralized Identifiers (DIDs) on the Educhain testnet.
-
-![AnonID Logo](src/components/Logo.tsx)
+A modern web <https://anon-id-a921.vercel.app/> application for creating, managing, and verifying Decentralized Identifiers (DIDs) on the Educhain testnet.
 
 ## Features
 
