@@ -7,9 +7,8 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { ArrowBack, CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
-import { useWeb3 } from '../contexts/Web3Context';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useWeb3 } from '../contexts/Web3Context';
 import { verifyDID } from '../utils/didStorage';
 
 const COLORS = {
