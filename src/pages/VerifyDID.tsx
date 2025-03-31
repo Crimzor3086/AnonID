@@ -31,11 +31,22 @@ interface VerificationDetails {
   error?: string;
   blockchainStatus?: boolean;
   locallyStored?: boolean;
+  exists?: boolean;
+  owner?: string;
+  creationTime?: string | null;
+  attributeCount?: number;
+  attributes?: Record<string, string>;
   localVerification?: {
-    createdAt: number;
-    lastModified: number;
+    createdAt: string;
+    lastModified: string;
     isActive: boolean;
+    history?: Array<{
+      action: 'create' | 'update' | 'deactivate' | 'reactivate';
+      timestamp: string;
+      details?: string;
+    }>;
   } | null;
+  verificationTime?: string;
 }
 
 const VerifyDID: React.FC = () => {
