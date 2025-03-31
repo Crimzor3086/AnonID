@@ -7,7 +7,6 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { ArrowBack, CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
 import { useWeb3 } from '../contexts/Web3Context';
 import Breadcrumbs from '../components/Breadcrumbs';
