@@ -27,9 +27,9 @@ import Logo from '../components/Logo';
 const COLORS = {
   primary: '#ff0000',
   secondary: '#000000',
-  textLight: '#ffffff',
-  background: '#f5f5f5',
-  paper: '#ffffff',
+  textLight: '#00ff00',
+  background: '#808080',
+  paper: '#0000ff'
 };
 
 const CreateDID: React.FC = () => {
