@@ -26,7 +26,6 @@ interface StorageError extends Error {
 // Storage key for local storage
 const STORAGE_KEY = 'anonid_dids';
 const MAX_STORAGE_SIZE = 5 * 1024 * 1024; // 5MB limit
-const ENCRYPTION_KEY = 'anonid-demo-key'; // TODO: Derive from wallet or user input in production
 
 // Logger
 const log = {
@@ -49,54 +48,15 @@ const createError = (code: StorageError['code'], message: string, details?: any)
   return error;
 };
 
-async function encrypt(text: string): Promise<string> {
-  const enc = new TextEncoder();
-  const key = await window.crypto.subtle.importKey(
-    'raw',
-    enc.encode(ENCRYPTION_KEY),
-    { name: 'AES-GCM' },
-    false,
-    ['encrypt']
-  );
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
-  const ciphertext = await window.crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
-    key,
-    enc.encode(text)
-  );
-  return btoa(String.fromCharCode(...iv) + String.fromCharCode(...new Uint8Array(ciphertext)));
-}
-
-async function decrypt(data: string): Promise<string> {
-  const raw = atob(data);
-  const iv = new Uint8Array([...raw].slice(0, 12).map(c => c.charCodeAt(0)));
-  const ciphertext = new Uint8Array([...raw].slice(12).map(c => c.charCodeAt(0)));
-  const enc = new TextEncoder();
-  const key = await window.crypto.subtle.importKey(
-    'raw',
-    enc.encode(ENCRYPTION_KEY),
-    { name: 'AES-GCM' },
-    false,
-    ['decrypt']
-  );
-  const plaintext = await window.crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
-    key,
-    ciphertext
-  );
-  return new TextDecoder().decode(plaintext);
-}
-
 // Initialize storage with error handling
-const initializeStorage = async (): Promise<DIDStorage> => {
+const initializeStorage = (): DIDStorage => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
       log.info('Initializing empty storage');
       return {};
     }
-    const decrypted = await decrypt(stored);
-    const parsed = JSON.parse(decrypted);
+    const parsed = JSON.parse(stored);
     log.info('Storage initialized', { size: stored.length, addresses: Object.keys(parsed).length });
     return parsed;
   } catch (err) {
@@ -106,15 +66,14 @@ const initializeStorage = async (): Promise<DIDStorage> => {
 };
 
 // Save storage with size check
-const saveStorage = async (storage: DIDStorage): Promise<void> => {
+const saveStorage = (storage: DIDStorage): void => {
   try {
     const serialized = JSON.stringify(storage);
     if (serialized.length > MAX_STORAGE_SIZE) {
       throw createError('STORAGE_FULL', 'Storage size limit exceeded');
     }
-    const encrypted = await encrypt(serialized);
-    localStorage.setItem(STORAGE_KEY, encrypted);
-    log.info('Storage saved', { size: encrypted.length, addresses: Object.keys(storage).length });
+    localStorage.setItem(STORAGE_KEY, serialized);
+    log.info('Storage saved', { size: serialized.length, addresses: Object.keys(storage).length });
   } catch (err) {
     log.error('Failed to save storage', err);
     throw err instanceof Error ? err : createError('OPERATION_FAILED', 'Failed to save storage', err);
