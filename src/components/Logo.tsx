@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import { COLORS } from '../theme';
 
 const Logo: React.FC = () => {
   return (

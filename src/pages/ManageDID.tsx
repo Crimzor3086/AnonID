@@ -24,12 +24,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import { getDIDsForAddress, updateDIDAttributes } from '../utils/didStorage';
 import Logo from '../components/Logo';
-
-const COLORS = {
-  primary: '#ff0000',
-  secondary: '#000000',
-  textLight: '#ffffff',
-};
+import { COLORS } from '../theme';
 
 const ManageDID: React.FC = () => {
   const navigate = useNavigate();

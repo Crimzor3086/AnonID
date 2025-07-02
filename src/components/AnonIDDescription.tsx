@@ -1,12 +1,7 @@
 import React from 'react';
 import { Box, Typography, Paper, Grid, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Security, VerifiedUser, Lock, School } from '@mui/icons-material';
-
-const COLORS = {
-  primary: '#1a237e', // Navy blue
-  secondary: '#6a1b9a', // Purple
-  textLight: '#ffffff',
-};
+import { COLORS } from '../theme';
 
 interface AnonIDDescriptionProps {
   variant?: 'light' | 'dark';

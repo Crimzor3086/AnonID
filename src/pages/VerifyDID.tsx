@@ -10,12 +10,7 @@ import {
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useWeb3 } from '../contexts/Web3Context';
 import { verifyDID } from '../utils/didStorage';
-
-const COLORS = {
-  primary: '#ff0000',
-  secondary: '#000000',
-  textLight: '#ffffff',
-};
+import { COLORS } from '../theme';
 
 interface VerificationDetails {
   formatValid?: boolean;

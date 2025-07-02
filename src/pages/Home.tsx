@@ -7,14 +7,7 @@ import { useWeb3 } from '../contexts/Web3Context';
 import { SAMPLE_DIDS } from '../utils/didFormat';
 import { ConnectionStrip } from '../components/ConnectionStrip';
 import Logo from '../components/Logo';
-
-// Custom theme colors
-const COLORS = {
-  primary: '#ff0000',
-  secondary: '#000000',
-  textLight: '#ffffff',
-  textDark: '#000000',
-};
+import { COLORS } from '../theme';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();

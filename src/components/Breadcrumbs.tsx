@@ -16,7 +16,7 @@ const Breadcrumbs: React.FC = () => {
 
   return (
     <Box sx={{ mb: 3, mt: 2 }}>
-      <MuiBreadcrumbs aria-label="breadcrumb">
+      <MuiBreadcrumbs aria-label="breadcrumb" role="navigation">
         <Link
           component={RouterLink}
           to="/"

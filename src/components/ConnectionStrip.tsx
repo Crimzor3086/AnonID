@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Chip, Stack } from '@mui/material';
 import { useWeb3 } from '../contexts/Web3Context';
+import { COLORS } from '../theme';
 
 export const ConnectionStrip: React.FC = () => {
   const { isConnected, balance, account } = useWeb3();
